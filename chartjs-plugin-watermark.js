@@ -27,12 +27,12 @@
  */
 var watermarkPlugin = {
 
-    drawWatermark: function(chartInstance) {
+    drawWatermark: function (chartInstance) {
         var context = chartInstance.chart.ctx;
 
         var watermark = chartInstance.watermark;
 
-        if(watermark.image) {
+        if (watermark.image) {
             var image = watermark.image;
 
             var height = watermark.height ? watermark.height : image.height;
@@ -41,7 +41,7 @@ var watermarkPlugin = {
             var x = watermark.x;
             var y = watermark.y;
 
-            switch(watermark.alignX) {
+            switch (watermark.alignX) {
                 case "right":
                     x = context.canvas.width - x - width;
                     break;
@@ -51,7 +51,7 @@ var watermarkPlugin = {
             }
 
 
-            switch(watermark.alignY) {
+            switch (watermark.alignY) {
                 case "bottom":
                     y = context.canvas.height - y - height;
                     break;
@@ -69,19 +69,29 @@ var watermarkPlugin = {
         }
     },
 
-    beforeInit: function(chartInstance) {
+    beforeInit: function (chartInstance) {
         chartInstance.watermark = {};
 
         var options = chartInstance.options;
 
-        if(options.watermark) {
+        if (options.watermark) {
             var watermark = options.watermark;
 
-            if(watermark.image) {
-                chartInstance.watermark.image = watermark.image;
+            if (watermark.image) {
+                var image = watermark.image;
+
+                if(typeof(image) == "string") {
+                    // create the image object with this as our src
+                    var imageObj = new Image();
+                    imageObj.src = image;
+
+                    image = imageObj;
+                }
+
+                chartInstance.watermark.image = image;
 
                 // automatically refresh the chart once the image has loaded (if necessary)
-                watermark.image.onload = function() {
+                image.onload = function () {
                     chartInstance.update();
                 };
             }
@@ -101,16 +111,16 @@ var watermarkPlugin = {
         }
     },
     // draw the image behind most chart elements
-    beforeDraw: function(chartInstance) {
+    beforeDraw: function (chartInstance) {
         var watermark = chartInstance.watermark;
-        if(watermark.image && watermark.position == "back") {
+        if (watermark.image && watermark.position == "back") {
             this.drawWatermark(chartInstance);
         }
     },
     // draw the image in front of most chart elements
-    afterDraw: function(chartInstance) {
+    afterDraw: function (chartInstance) {
         var watermark = chartInstance.watermark;
-        if(watermark.image && watermark.position == "front") {
+        if (watermark.image && watermark.position == "front") {
             this.drawWatermark(chartInstance);
         }
     },
