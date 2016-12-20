@@ -11,11 +11,10 @@ To configure the watermark plugin, add these options to your chart config:
 ```javascript
 {
     // container for watermark options
-	watermark: {
-	    // the image you would like to show, of type "Image"
-	    // var watermark = new Image();
-	    // watermark.src = "http://placehold.it/350x150";
-        image: watermark,
+    watermark: {
+        // the image you would like to show
+        // alternatively, this can be of type "Image"
+        image: "http://placehold.it/350x150",
         
         // x and y offsets of the image
         x: 50,
@@ -39,7 +38,7 @@ To configure the watermark plugin, add these options to your chart config:
         // determines whether the watermark is drawn on top of or behind the chart
         // valid values: "front", "back"
         position: "back",
-	}
+    }
 }
 ```
 
