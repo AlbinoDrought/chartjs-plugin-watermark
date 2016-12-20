@@ -57,22 +57,24 @@ var watermarkPlugin = {
             var y = watermark.y;
 
             var canvas = context.canvas;
+            var cWidth = canvas.clientWidth || canvas.width;
+            var cHeight = canvas.clientHeight || canvas.height;
 
             switch (watermark.alignX) {
                 case "right":
-                    x = canvas.width - x - width;
+                    x = cWidth - x - width;
                     break;
                 case "middle":
-                    x = (canvas.width / 2) - (width / 2) - x;
+                    x = (cWidth / 2) - (width / 2) - x;
                     break;
             }
 
             switch (watermark.alignY) {
                 case "bottom":
-                    y = canvas.height - y - height;
+                    y = cHeight - y - height;
                     break;
                 case "middle":
-                    y = (canvas.height / 2) - (height / 2) - y;
+                    y = (cHeight / 2) - (height / 2) - y;
                     break;
             }
 
