@@ -40,25 +40,59 @@ var watermarkPlugin = {
         position: "front",
 
         opacity: 1,
+
+        image: false,
     },
 
-    drawWatermark: function (chartInstance) {
-        var context = chartInstance.chart.ctx;
+    isPercentage: function (value) {
+        return typeof(value) == "string" && value.charAt(value.length - 1) == "%";
+    },
 
+    calcPercentage: function (percentage, max) {
+        var value = percentage.substr(0, percentage.length - 1);
+        value = parseFloat(value);
+
+        return max * (value / 100);
+    },
+
+    autoPercentage: function (value, maxIfPercentage) {
+        if (this.isPercentage(value)) {
+            value = this.calcPercentage(value, maxIfPercentage);
+        }
+
+        return value;
+    },
+
+    imageFromString: function (imageSrc) {
+        // create the image object with this as our src
+        var imageObj = new Image();
+        imageObj.src = imageSrc;
+
+        return imageObj;
+    },
+
+    drawWatermark: function (chartInstance, position) {
         var watermark = chartInstance.watermark;
+
+        // only draw watermarks meant for us
+        if (watermark.position != position) return;
 
         if (watermark.image) {
             var image = watermark.image;
 
-            var height = watermark.height ? watermark.height : image.height;
-            var width = watermark.width ? watermark.width : image.width;
-
-            var x = watermark.x;
-            var y = watermark.y;
-
+            var context = chartInstance.chart.ctx;
             var canvas = context.canvas;
-            var cWidth = canvas.clientWidth || canvas.width;
             var cHeight = canvas.clientHeight || canvas.height;
+            var cWidth = canvas.clientWidth || canvas.width;
+
+            var height = watermark.height || image.height;
+            height = this.autoPercentage(height, cHeight);
+
+            var width = watermark.width || image.width;
+            width = this.autoPercentage(width, cWidth);
+
+            var x = this.autoPercentage(watermark.x, cWidth);
+            var y = this.autoPercentage(watermark.y, cHeight);
 
             switch (watermark.alignX) {
                 case "right":
@@ -98,42 +132,31 @@ var watermarkPlugin = {
             if (watermark.image) {
                 var image = watermark.image;
 
-                if(typeof(image) == "string") {
-                    // create the image object with this as our src
-                    var imageObj = new Image();
-                    imageObj.src = image;
-
-                    image = imageObj;
-
-                    // overwrite the image saved in our config
-                    watermark.image = image;
+                if (typeof(image) == "string") {
+                    image = this.imageFromString(image);
                 }
 
                 // automatically refresh the chart once the image has loaded (if necessary)
                 image.onload = function () {
                     chartInstance.update();
                 };
+
+                watermark.image = image;
             }
 
             chartInstance.watermark = watermark;
         }
     },
+
     // draw the image behind most chart elements
     beforeDraw: function (chartInstance) {
-        var watermark = chartInstance.watermark;
-        if (watermark.image && watermark.position == "back") {
-            this.drawWatermark(chartInstance);
-        }
+        this.drawWatermark(chartInstance, "back");
     },
     // draw the image in front of most chart elements
     afterDraw: function (chartInstance) {
-        var watermark = chartInstance.watermark;
-        if (watermark.image && watermark.position == "front") {
-            this.drawWatermark(chartInstance);
-        }
+        this.drawWatermark(chartInstance, "front");
     },
 };
 
 Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
-
 Chart.pluginService.register(watermarkPlugin);
