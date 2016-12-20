@@ -27,6 +27,21 @@
  */
 var watermarkPlugin = {
 
+    defaultOptions: {
+        x: 0,
+        y: 0,
+
+        height: false,
+        width: false,
+
+        alignX: "top",
+        alignY: "left",
+
+        position: "front",
+
+        opacity: 1,
+    },
+
     drawWatermark: function (chartInstance) {
         var context = chartInstance.chart.ctx;
 
@@ -41,22 +56,23 @@ var watermarkPlugin = {
             var x = watermark.x;
             var y = watermark.y;
 
+            var canvas = context.canvas;
+
             switch (watermark.alignX) {
                 case "right":
-                    x = context.canvas.width - x - width;
+                    x = canvas.width - x - width;
                     break;
                 case "middle":
-                    x = (context.canvas.width / 2) - (width / 2) - x;
+                    x = (canvas.width / 2) - (width / 2) - x;
                     break;
             }
 
-
             switch (watermark.alignY) {
                 case "bottom":
-                    y = context.canvas.height - y - height;
+                    y = canvas.height - y - height;
                     break;
                 case "middle":
-                    y = (context.canvas.height / 2) - (height / 2) - y;
+                    y = (canvas.height / 2) - (height / 2) - y;
                     break;
             }
 
@@ -75,7 +91,7 @@ var watermarkPlugin = {
         var options = chartInstance.options;
 
         if (options.watermark) {
-            var watermark = options.watermark;
+            var watermark = Chart.helpers.extend(this.defaultOptions, options.watermark);
 
             if (watermark.image) {
                 var image = watermark.image;
@@ -86,9 +102,10 @@ var watermarkPlugin = {
                     imageObj.src = image;
 
                     image = imageObj;
-                }
 
-                chartInstance.watermark.image = image;
+                    // overwrite the image saved in our config
+                    watermark.image = image;
+                }
 
                 // automatically refresh the chart once the image has loaded (if necessary)
                 image.onload = function () {
@@ -96,18 +113,7 @@ var watermarkPlugin = {
                 };
             }
 
-            chartInstance.watermark.x = watermark.x ? watermark.x : 0;
-            chartInstance.watermark.y = watermark.y ? watermark.y : 0;
-
-            chartInstance.watermark.height = watermark.height ? watermark.height : false;
-            chartInstance.watermark.width = watermark.width ? watermark.width : false;
-
-            chartInstance.watermark.alignX = watermark.alignX ? watermark.alignX : "left";
-            chartInstance.watermark.alignY = watermark.alignY ? watermark.alignY : "top";
-
-            chartInstance.watermark.position = watermark.position ? watermark.position : "front";
-
-            chartInstance.watermark.opacity = watermark.opacity ? watermark.opacity : 1;
+            chartInstance.watermark = watermark;
         }
     },
     // draw the image behind most chart elements
