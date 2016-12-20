@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <script src="https://npmcdn.com/chart.js@latest/dist/Chart.bundle.min.js"></script>
+        <script src="../chartjs-plugin-watermark.js"></script>
+        <style type="text/css">
+            #myChart {
+                max-width: 600px;
+                max-height: 400px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="myChartDiv">
+            <canvas id="myChart" width="600" height="400"></canvas>
+        </div>
+        <script type="text/javascript">
+            var ctx = document.getElementById("myChart");
+
+            var image = new Image();
+            image.src = "http://placehold.it/350x150";
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [12, 19, 3, 5, 2, 3]
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    },
+                    watermark: {
+                        image: image,
+						
+						alignY: "bottom",
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
