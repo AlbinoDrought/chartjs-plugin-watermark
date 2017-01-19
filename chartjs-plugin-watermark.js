@@ -134,10 +134,12 @@ var watermarkPlugin = {
     beforeInit: function (chartInstance) {
         chartInstance.watermark = {};
 
-        var options = chartInstance.options;
+        var helpers = Chart.helpers,
+            options = chartInstance.options;
 
         if (options.watermark) {
-            var watermark = Chart.helpers.extend(this.defaultOptions, options.watermark);
+            var clonedDefaultOptions = helpers.clone(this.defaultOptions),
+                watermark = helpers.extend(clonedDefaultOptions, options.watermark);
 
             if (watermark.image) {
                 var image = watermark.image;
