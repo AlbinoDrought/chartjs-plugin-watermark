@@ -35,6 +35,12 @@ To configure the watermark plugin, add these options to your chart config:
         // valid values: "top", "middle", "bottom"
         alignY: "bottom",
         
+        // if true, aligns the watermark to the inside of the chart area (where the lines are)
+        // (where the lines are)
+        // if false, aligns the watermark to the inside of the canvas
+        // see samples/alignToChartArea.html
+        alignToChartArea: false,
+        
         // determines whether the watermark is drawn on top of or behind the chart
         // valid values: "front", "back"
         position: "back",

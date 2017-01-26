@@ -42,6 +42,7 @@ var watermarkPlugin = {
 
         alignX: "top",
         alignY: "left",
+        alignToChartArea: false,
 
         position: "front",
 
@@ -88,8 +89,22 @@ var watermarkPlugin = {
 
             var context = chartInstance.chart.ctx;
             var canvas = context.canvas;
-            var cHeight = canvas.clientHeight || canvas.height;
-            var cWidth = canvas.clientWidth || canvas.width;
+
+            var cHeight, cWidth;
+            var offsetX = 0, offsetY = 0;
+
+            if(watermark.alignToChartArea) {
+                var chartArea = chartInstance.chartArea;
+
+                cHeight = chartArea.bottom - chartArea.top;
+                cWidth = chartArea.right - chartArea.left;
+
+                offsetX = chartArea.left;
+                offsetY = chartArea.top;
+            } else {
+                cHeight = canvas.clientHeight || canvas.height;
+                cWidth = canvas.clientWidth || canvas.width;
+            }
 
             var height = watermark.height || image.height;
             height = this.autoPercentage(height, cHeight);
@@ -121,7 +136,7 @@ var watermarkPlugin = {
             context.save();
 
             context.globalAlpha = watermark.opacity;
-            context.drawImage(image, x, y, width, height);
+            context.drawImage(image, offsetX + x, offsetY + y, width, height);
 
             context.restore();
         }
