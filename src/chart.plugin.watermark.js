@@ -161,7 +161,9 @@ var watermarkPlugin = {
 
                 // automatically refresh the chart once the image has loaded (if necessary)
                 image.onload = function () {
-                    chartInstance.update();
+                    if(chartInstance.chart.ctx) {
+                        chartInstance.update();
+                    }
                 };
 
                 watermark.image = image;
