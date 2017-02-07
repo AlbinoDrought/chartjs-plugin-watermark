@@ -137,12 +137,13 @@ var watermarkPlugin = {
                     break;
             }
 
-            context.save();
-
+            // avoid unnecessary calls to context save/restore, just manually restore the single value we change
+            var oldAlpha = context.globalAlpha;
             context.globalAlpha = watermark.opacity;
+
             context.drawImage(image, offsetX + x, offsetY + y, width, height);
 
-            context.restore();
+            context.globalAlpha = oldAlpha;
         }
     },
 
