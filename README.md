@@ -48,6 +48,39 @@ To configure the watermark plugin, add these options to your chart config:
 }
 ```
 
+Optionally, multiple watermarks can be added to the same chart like this: (see [samples/multi_watermarks.html](samples/multi_watermarks.html))
+
+```javascript
+{
+    watermarks: [{
+        image: "http://placehold.it/150x150",
+
+        x: 10,
+        y: 10,
+
+        alignX: "right",
+        alignY: "top",
+    }, {
+        image: "http://placehold.it/150x150",
+
+        x: 10,
+        y: 10,
+
+        alignX: "left",
+        alignY: "bottom",
+    }, {
+        image: "http://placehold.it/150x150",
+
+        x: 10,
+        y: 10,
+
+        alignX: "right",
+        alignY: "bottom",
+    }]
+}
+```
+
+
 ## Installation
 
 To use, download chartjs-plugin-watermark.js and reference it in your project.

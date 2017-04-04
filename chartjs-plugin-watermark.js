@@ -35,46 +35,27 @@
 var Chart = require('chart.js');
 Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
 
-var watermarkPlugin = {
+var helpers = Chart.helpers;
 
-    defaultOptions: {
-        x: 0,
-        y: 0,
-
-        height: false,
-        width: false,
-
-        alignX: "top",
-        alignY: "left",
-        alignToChartArea: false,
-
-        position: "front",
-
-        opacity: 1,
-
-        image: false,
+var isPercentage = function (value) {
+        return typeof(value) === "string" && value.charAt(value.length - 1) === "%";
     },
-
-    isPercentage: function (value) {
-        return typeof(value) == "string" && value.charAt(value.length - 1) == "%";
-    },
-
-    calcPercentage: function (percentage, max) {
+    calcPercentage = function (percentage, max) {
         var value = percentage.substr(0, percentage.length - 1);
         value = parseFloat(value);
 
         return max * (value / 100);
     },
 
-    autoPercentage: function (value, maxIfPercentage) {
-        if (this.isPercentage(value)) {
-            value = this.calcPercentage(value, maxIfPercentage);
+    autoPercentage = function (value, maxIfPercentage) {
+        if (isPercentage(value)) {
+            value = calcPercentage(value, maxIfPercentage);
         }
 
         return value;
     },
 
-    imageFromString: function (imageSrc) {
+    imageFromString = function (imageSrc) {
         // create the image object with this as our src
         var imageObj = new Image();
         imageObj.src = imageSrc;
@@ -82,11 +63,9 @@ var watermarkPlugin = {
         return imageObj;
     },
 
-    drawWatermark: function (chartInstance, position) {
-        var watermark = chartInstance.watermark;
-
+    drawWatermark = function (chartInstance, position, watermark) {
         // only draw watermarks meant for us
-        if (watermark.position != position) return;
+        if (watermark.position !== position) return;
 
         if (watermark.image) {
             var image = watermark.image;
@@ -111,13 +90,13 @@ var watermarkPlugin = {
             }
 
             var height = watermark.height || image.height;
-            height = this.autoPercentage(height, cHeight);
+            height = autoPercentage(height, cHeight);
 
             var width = watermark.width || image.width;
-            width = this.autoPercentage(width, cWidth);
+            width = autoPercentage(width, cWidth);
 
-            var x = this.autoPercentage(watermark.x, cWidth);
-            var y = this.autoPercentage(watermark.y, cHeight);
+            var x = autoPercentage(watermark.x, cWidth);
+            var y = autoPercentage(watermark.y, cHeight);
 
             switch (watermark.alignX) {
                 case "right":
@@ -146,43 +125,77 @@ var watermarkPlugin = {
             context.globalAlpha = oldAlpha;
         }
     },
+    drawWatermarks = function(chartInstance, position) {
+        helpers.each(chartInstance.watermarks, function(watermark) {
+            drawWatermark(chartInstance, position, watermark);
+        });
+    };
+
+var watermarkPlugin = {
+    defaultOptions: function() {
+        return {
+            x: 0,
+            y: 0,
+
+            height: false,
+            width: false,
+
+            alignX: "top",
+            alignY: "left",
+            alignToChartArea: false,
+
+            position: "front",
+
+            opacity: 1,
+
+            image: false,
+        }
+    },
 
     beforeInit: function (chartInstance) {
-        chartInstance.watermark = {};
-
-        var helpers = Chart.helpers,
+        var watermarks = [],
+            me = this,
             options = chartInstance.options;
 
-        if (options.watermark) {
-            var clonedDefaultOptions = helpers.clone(this.defaultOptions),
-                watermark = helpers.extend(clonedDefaultOptions, options.watermark);
+        var parseWatermark = function(watermark) {
+            watermark = helpers.extend(me.defaultOptions(), watermark);
 
             if (watermark.image) {
                 var image = watermark.image;
 
-                if (typeof(image) == "string") {
-                    image = this.imageFromString(image);
+                if (typeof(image) === "string") {
+                    image = imageFromString(image);
                 }
 
                 // automatically refresh the chart once the image has loaded (if necessary)
+                // keep old load handlers
+                var oldOnLoad = image.onload;
                 image.onload = function () {
                     chartInstance.update();
+                    if(oldOnLoad) oldOnLoad();
                 };
 
                 watermark.image = image;
             }
 
-            chartInstance.watermark = watermark;
-        }
+            watermarks.push(watermark);
+        };
+
+        // backwards compat
+        if(options.watermark) parseWatermark(options.watermark);
+        // multiple watermarks
+        if (options.watermarks) helpers.each(options.watermarks, parseWatermark);
+
+        chartInstance.watermarks = watermarks;
     },
 
     // draw the image behind most chart elements
     beforeDraw: function (chartInstance) {
-        this.drawWatermark(chartInstance, "back");
+        drawWatermarks(chartInstance, "back");
     },
     // draw the image in front of most chart elements
     afterDraw: function (chartInstance) {
-        this.drawWatermark(chartInstance, "front");
+        drawWatermarks(chartInstance, "front");
     },
 };
 
