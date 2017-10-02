@@ -1,5 +1,7 @@
 # chartjs-plugin-watermark
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/AlbinoDrought/chartjs-plugin-watermark.svg)](https://greenkeeper.io/)
+
 A simple watermark plugin for Chart.js
 
 [Codepen Demo](http://codepen.io/albinodrought/pen/RovdYp)
