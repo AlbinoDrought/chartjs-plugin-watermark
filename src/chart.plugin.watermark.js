@@ -17,7 +17,7 @@
  *          alignX: "left"/"right",
  *          alignY: "top"/"bottom",
  *
- *          position: "front"/"back",
+ *          position: "front"/"back/between",
  *
  *          opacity: 0 to 1, // uses ctx.globalAlpha
  *      }
@@ -180,6 +180,10 @@ var watermarkPlugin = {
     // draw the image in front of most chart elements
     afterDraw: function (chartInstance) {
         this.drawWatermark(chartInstance, "front");
+    },
+    // draw the image in front of chart elements, but before tooltips
+    afterDatasetsDraw: function (chartInstance) {
+        this.drawWatermark(chartInstance, "between");
     },
 };
 
