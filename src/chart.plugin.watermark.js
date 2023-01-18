@@ -14,8 +14,8 @@
  *          width: 0,
  *          height: 0,
  *
- *          alignX: "left"/"right",
- *          alignY: "top"/"bottom",
+ *          alignX: "left"/"right"/"middle",
+ *          alignY: "top"/"bottom"/"middle",
  *
  *          position: "front"/"back",
  *
@@ -26,12 +26,8 @@
  * Created by Sean on 12/19/2016.
  */
 
-// https://github.com/chartjs/chartjs-plugin-zoom/blob/14590e77b58b10d65d25c4241bb71bd26a5383dd/src/chart.zoom.js#L9
-// register as window global if used in browser
-var Chart = require('chart.js');
-Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
-
 var watermarkPlugin = {
+    id: 'watermark',
 
     defaultOptions: {
         x: 0,
@@ -87,7 +83,7 @@ var watermarkPlugin = {
         if (watermark.image) {
             var image = watermark.image;
 
-            var context = chartInstance.chart.ctx;
+            var context = chartInstance.ctx;
             var canvas = context.canvas;
 
             var cHeight, cWidth;
@@ -145,12 +141,11 @@ var watermarkPlugin = {
     beforeInit: function (chartInstance) {
         chartInstance.watermark = {};
 
-        var helpers = Chart.helpers,
-            options = chartInstance.options;
+        var options = chartInstance.options;
 
         if (options.watermark) {
-            var clonedDefaultOptions = helpers.clone(this.defaultOptions),
-                watermark = helpers.extend(clonedDefaultOptions, options.watermark);
+            var clonedDefaultOptions = Object.assign({}, this.defaultOptions),
+                watermark = Object.assign(clonedDefaultOptions, options.watermark);
 
             if (watermark.image) {
                 var image = watermark.image;
@@ -161,7 +156,7 @@ var watermarkPlugin = {
 
                 // automatically refresh the chart once the image has loaded (if necessary)
                 image.onload = function () {
-                    if(chartInstance.chart.ctx) {
+                    if(chartInstance.ctx) {
                         chartInstance.update();
                     }
                 };
@@ -184,4 +179,8 @@ var watermarkPlugin = {
 };
 
 module.exports = watermarkPlugin;
-Chart.pluginService.register(watermarkPlugin);
+
+// If used in browser, register globally
+if (window.Chart) {
+    window.Chart.register(watermarkPlugin);
+}

@@ -1,6 +1,6 @@
 <html>
     <head>
-        <script src="https://npmcdn.com/chart.js@latest/dist/Chart.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.1.2/dist/chart.umd.min.js"></script>
         <script src="../chartjs-plugin-watermark.js"></script>
         <style type="text/css">
             #myChart {
@@ -17,7 +17,7 @@
             var ctx = document.getElementById("myChart");
 
             var image = new Image();
-            image.src = "http://placehold.it/350x150";
+            image.src = "https://placekitten.com/200/300";
 
             var myChart = new Chart(ctx, {
                 type: 'line',
@@ -30,11 +30,9 @@
                 },
                 options: {
                     scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero:true
-                            }
-                        }]
+                        y: {
+                            beginAtZero: true
+                        }
                     },
                     watermark: {
                         image: image,

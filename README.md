@@ -4,6 +4,30 @@ A simple watermark plugin for Chart.js
 
 [Codepen Demo](http://codepen.io/albinodrought/pen/RovdYp)
 
+## Installation
+
+### Using NPM
+
+```
+npm i chartjs-plugin-watermark
+```
+
+```js
+import { Chart } from 'chart.js'
+import ChartjsPluginWatermark from 'chartjs-plugin-watermark'
+
+Chart.register(ChartjsPluginWatermark)
+```
+
+### Using CDN
+
+Plugin will automatically register if their is a global Chart.js instance available.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.1.2/dist/chart.umd.min.js"></script>
+<script src="../chartjs-plugin-watermark.min.js"></script>
+```
+
 ## Configuration
 
 To configure the watermark plugin, add these options to your chart config:
@@ -14,7 +38,7 @@ To configure the watermark plugin, add these options to your chart config:
     watermark: {
         // the image you would like to show
         // alternatively, this can be of type "Image"
-        image: "http://placehold.it/350x150",
+        image: "https://placekitten.com/200/300",
         
         // x and y offsets of the image
         x: 50,
@@ -48,9 +72,12 @@ To configure the watermark plugin, add these options to your chart config:
 }
 ```
 
-## Installation
+## Build Locally
 
-To use, download chartjs-plugin-watermark.js and reference it in your project.
+```
+npm install
+npx gulp
+```
 
 ## Documentation
 

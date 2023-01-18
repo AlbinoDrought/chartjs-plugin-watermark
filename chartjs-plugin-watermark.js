@@ -1,7 +1,5 @@
 /* chartjs-plugin-watermark | AlbinoDrought | MIT License | https://github.com/AlbinoDrought/chartjs-plugin-watermark/blob/master/LICENSE */
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-
-},{}],2:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 /**
  * Chart.js Simple Watermark plugin
  *
@@ -18,8 +16,8 @@
  *          width: 0,
  *          height: 0,
  *
- *          alignX: "left"/"right",
- *          alignY: "top"/"bottom",
+ *          alignX: "left"/"right"/"middle",
+ *          alignY: "top"/"bottom"/"middle",
  *
  *          position: "front"/"back",
  *
@@ -30,12 +28,8 @@
  * Created by Sean on 12/19/2016.
  */
 
-// https://github.com/chartjs/chartjs-plugin-zoom/blob/14590e77b58b10d65d25c4241bb71bd26a5383dd/src/chart.zoom.js#L9
-// register as window global if used in browser
-var Chart = require('chart.js');
-Chart = typeof(Chart) === 'function' ? Chart : window.Chart;
-
 var watermarkPlugin = {
+    id: 'watermark',
 
     defaultOptions: {
         x: 0,
@@ -91,7 +85,7 @@ var watermarkPlugin = {
         if (watermark.image) {
             var image = watermark.image;
 
-            var context = chartInstance.chart.ctx;
+            var context = chartInstance.ctx;
             var canvas = context.canvas;
 
             var cHeight, cWidth;
@@ -137,25 +131,23 @@ var watermarkPlugin = {
                     break;
             }
 
-            // avoid unnecessary calls to context save/restore, just manually restore the single value we change
-            var oldAlpha = context.globalAlpha;
-            context.globalAlpha = watermark.opacity;
+            context.save();
 
+            context.globalAlpha = watermark.opacity;
             context.drawImage(image, offsetX + x, offsetY + y, width, height);
 
-            context.globalAlpha = oldAlpha;
+            context.restore();
         }
     },
 
     beforeInit: function (chartInstance) {
         chartInstance.watermark = {};
 
-        var helpers = Chart.helpers,
-            options = chartInstance.options;
+        var options = chartInstance.options;
 
         if (options.watermark) {
-            var clonedDefaultOptions = helpers.clone(this.defaultOptions),
-                watermark = helpers.extend(clonedDefaultOptions, options.watermark);
+            var clonedDefaultOptions = Object.assign({}, this.defaultOptions),
+                watermark = Object.assign(clonedDefaultOptions, options.watermark);
 
             if (watermark.image) {
                 var image = watermark.image;
@@ -166,7 +158,9 @@ var watermarkPlugin = {
 
                 // automatically refresh the chart once the image has loaded (if necessary)
                 image.onload = function () {
-                    chartInstance.update();
+                    if(chartInstance.ctx) {
+                        chartInstance.update();
+                    }
                 };
 
                 watermark.image = image;
@@ -187,6 +181,9 @@ var watermarkPlugin = {
 };
 
 module.exports = watermarkPlugin;
-Chart.pluginService.register(watermarkPlugin);
 
-},{"chart.js":1}]},{},[2]);
+// If used in browser, register globally
+if (window.Chart) {
+    window.Chart.register(watermarkPlugin);
+}
+},{}]},{},[1]);
