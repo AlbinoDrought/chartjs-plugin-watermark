@@ -66,7 +66,7 @@ To configure the watermark plugin, add these options to your chart config:
         alignToChartArea: false,
         
         // determines whether the watermark is drawn on top of or behind the chart
-        // valid values: "front", "back"
+        // valid values: "front", "back", "between"
         position: "back",
     }
 }
@@ -76,7 +76,7 @@ To configure the watermark plugin, add these options to your chart config:
 
 ```
 npm install
-npx gulp
+npm run build
 ```
 
 ## Documentation
