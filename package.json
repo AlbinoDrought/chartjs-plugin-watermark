@@ -18,14 +18,14 @@
   "homepage": "https://github.com/AlbinoDrought/chartjs-plugin-watermark#readme",
   "devDependencies": {
     "browserify": "^13.1.1",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-insert": "^0.5.0",
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^2.0.0",
     "merge-stream": "^1.0.1",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.8.0"
   },
   "dependencies": {
