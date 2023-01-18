@@ -1,8 +1,15 @@
 # chartjs-plugin-watermark
 
-A simple watermark plugin for Chart.js
+[![npm version](https://badge.fury.io/js/chartjs-plugin-watermark.svg)](https://badge.fury.io/js/chartjs-plugin-watermark)
+![Build Status: Node.js CI](https://github.com/AlbinoDrought/chartjs-plugin-watermark/workflows/Node.js%20CI/badge.svg)
 
-[Codepen Demo](http://codepen.io/albinodrought/pen/RovdYp)
+[![NPM](https://nodei.co/npm/chartjs-plugin-watermark.png)](https://nodei.co/npm/chartjs-plugin-watermark/)
+
+A simple watermark plugin for Chart.js 3 and 4.
+
+For Chart.js 2, use [version ^1](https://www.npmjs.com/package/chartjs-plugin-watermark/v/1.0.3)
+
+[View samples on Github Pages](https://albinodrought.github.io/chartjs-plugin-watermark/samples/)
 
 ## Installation
 
