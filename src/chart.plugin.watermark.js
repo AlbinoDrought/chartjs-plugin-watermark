@@ -14,8 +14,8 @@
  *          width: 0,
  *          height: 0,
  *
- *          alignX: "left"/"right",
- *          alignY: "top"/"bottom",
+ *          alignX: "left"/"right"/"middle",
+ *          alignY: "top"/"bottom"/"middle",
  *
  *          position: "front"/"back",
  *
