@@ -1,6 +1,6 @@
 {
   "name": "chartjs-plugin-watermark",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "A simple watermark plugin for Chart.js",
   "main": "src/chart.plugin.watermark.js",
   "scripts": {
