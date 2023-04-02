@@ -187,7 +187,10 @@ var watermarkPlugin = {
 module.exports = watermarkPlugin;
 
 // If used in browser, register globally
-if (window.Chart) {
-    window.Chart.register(watermarkPlugin);
+if (window !== undefined) {
+    if (window.Chart) {
+        window.Chart.register(watermarkPlugin);
+    }
 }
+
 },{}]},{},[1]);
